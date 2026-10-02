@@ -4,6 +4,9 @@ This document records the changes made between versions, starting with version 0
 
 # After 0.9.0 (Current)
 
+* Refuse blocks that decode to more than the maximum block size (the smaller of the window size and 128kb) with the new `DecompressBlockError::DecompressedSizeTooLarge`, before writing their output. A malformed frame could make a single block write gigabytes, or panic.
+* Stop decoding Huffman-compressed literals at the count their section states.
+
 # After 0.8.3
 
 * Avoid emitting compressed blocks when the compressed payload is not smaller

@@ -49,8 +49,7 @@ fn decompress_literals(
     let num_streams = section.num_streams.ok_or(err::MissingNumStreams)?;
 
     target.reserve(section.regenerated_size as usize);
-    // The streams hold exactly this many literals. A bitstream that holds more would otherwise
-    // be decoded to its end first, up to 8 literals per byte of it, before the count is checked.
+    // stop at the stated count, not after decoding a longer stream to its end
     let end = target.len() + section.regenerated_size as usize;
     let source = &source[0..compressed_size];
     let mut bytes_read = 0;

@@ -5,8 +5,7 @@ use crate::decoding::errors::ExecuteSequencesError;
 pub fn execute_sequences(scratch: &mut DecoderScratch) -> Result<(), ExecuteSequencesError> {
     let mut literals_copy_counter = 0;
     let old_buffer_size = scratch.buffer.len();
-    // usize, not u32: callers bound a block's output, but the sum must not wrap regardless
-    let mut seq_sum: usize = 0;
+    let mut seq_sum = 0;
 
     for idx in 0..scratch.sequences.len() {
         let seq = scratch.sequences[idx];

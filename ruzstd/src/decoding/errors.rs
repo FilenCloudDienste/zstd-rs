@@ -264,9 +264,9 @@ pub enum DecompressBlockError {
     SequencesHeaderParseError(SequencesHeaderParseError),
     DecodeSequenceError(DecodeSequenceError),
     ExecuteSequencesError(ExecuteSequencesError),
-    /// The block decompresses to more than its maximum of 128 KiB, at least `at_least` bytes.
     DecompressedSizeTooLarge {
         at_least: u64,
+        max: u64,
     },
 }
 
@@ -304,11 +304,10 @@ impl core::fmt::Display for DecompressBlockError {
             DecompressBlockError::SequencesHeaderParseError(e) => write!(f, "{e:?}"),
             DecompressBlockError::DecodeSequenceError(e) => write!(f, "{e:?}"),
             DecompressBlockError::ExecuteSequencesError(e) => write!(f, "{e:?}"),
-            DecompressBlockError::DecompressedSizeTooLarge { at_least } => {
+            DecompressBlockError::DecompressedSizeTooLarge { at_least, max } => {
                 write!(
                     f,
-                    "The block decompresses to at least {at_least} bytes, over the maximum block size of {} bytes",
-                    crate::common::MAX_BLOCK_SIZE,
+                    "Block decompresses to more than the maximum block size. Is at least: {at_least}, Should be at most: {max}",
                 )
             }
         }
@@ -664,7 +663,7 @@ impl core::fmt::Display for DecompressLiteralsError {
             DecompressLiteralsError::DecodedLiteralCountMismatch { decoded, expected } => {
                 write!(
                     f,
-                    "Did not decode enough literals: {decoded}, Should have been: {expected}",
+                    "Decoded the wrong number of literals: {decoded}, Should have been: {expected}",
                 )
             }
         }
